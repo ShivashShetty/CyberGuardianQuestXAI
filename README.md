@@ -189,7 +189,6 @@ npm run preview      # Preview production build locally
 ```
 
 ### Deployment Options
-- **Lovable Platform**: One-click deployment via Lovable interface
 - **Static Hosting**: Vercel, Netlify, GitHub Pages
 - **CDN Integration**: Optimized global content delivery
 - **Custom Domains**: Full custom domain support
@@ -261,4 +260,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 **🔐 Securing the future, one game at a time**
 
-**Project URL**: https://lovable.dev/projects/01ba7be5-daab-4e65-b990-a7b5065e4c65
+
