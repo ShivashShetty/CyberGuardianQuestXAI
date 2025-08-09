@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Brain, Target, Trophy, Zap, Eye, Lock, AlertTriangle } from 'lucide-react';
+import { Shield, Brain, Target, Trophy, Zap, Eye, Lock, AlertTriangle, BrainCircuit } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -11,6 +11,7 @@ import { AIExplainer } from '@/components/AIExplainer';
 import { LearningModule } from '@/components/LearningModule';
 import { ProgressDashboard } from '@/components/ProgressDashboard';
 import { CyberDefenseGame } from '@/components/CyberDefenseGame';
+import { WordPuzzleGame } from '@/components/WordGame'; // --- IMPORT THE NEW COMPONENT ---
 
 const Index = () => {
   const [userLevel, setUserLevel] = useState(1);
@@ -21,15 +22,15 @@ const Index = () => {
   const { toast } = useToast();
 
   const safeNumber = (key: string) => {
-  const val = localStorage.getItem(key);
-  return val && !isNaN(Number(val)) ? Number(val) : 0;
-};
+    const val = localStorage.getItem(key);
+    return val && !isNaN(Number(val)) ? Number(val) : 0;
+  };
 
-const finalGameStats = {
-  highScore: safeNumber("cyberGameHighScore"),
-  gamesPlayed: safeNumber("cyberGameTotalGames"),
-  totalScore: safeNumber("cyberGameTotalScore"),
-};
+  const finalGameStats = {
+    highScore: safeNumber("cyberGameHighScore"),
+    gamesPlayed: safeNumber("cyberGameTotalGames"),
+    totalScore: safeNumber("cyberGameTotalScore"),
+  };
 
   const modules = [
     {
@@ -89,11 +90,9 @@ const finalGameStats = {
     };
     setGameStats(newStats);
     
-    // Award XP based on game performance
     const gameXP = Math.floor(score / 10) + (level * 50) + (wave * 25);
     setUserXP(prev => prev + gameXP);
     
-    // Level up logic
     const newLevel = Math.floor((userXP + gameXP) / 500) + 1;
     if (newLevel > userLevel) {
       setUserLevel(newLevel);
@@ -114,7 +113,6 @@ const finalGameStats = {
       setCompletedModules([...completedModules, moduleId]);
       setUserXP(prev => prev + xpGained);
       
-      // Level up logic
       const newLevel = Math.floor((userXP + xpGained) / 500) + 1;
       if (newLevel > userLevel) {
         setUserLevel(newLevel);
@@ -270,7 +268,6 @@ const finalGameStats = {
             ))}
           </div>
 
-          {/* Active Learning Module */}
           <LearningModule 
             module={modules.find(m => m.id === currentModule) || modules[0]}
             onComplete={handleModuleComplete}
@@ -311,6 +308,22 @@ const finalGameStats = {
           </div>
 
           <CyberDefenseGame onGameComplete={handleGameComplete} />
+        </div>
+      </section>
+      
+      {/* --- NEW: WORD PUZZLE GAME SECTION --- */}
+      <section id="word-puzzle" className="py-20 px-4 bg-card/50">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4 bg-gradient-cyber bg-clip-text text-transparent">
+              Vocabulary Challenge
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Sharpen your mind and test your knowledge of key cybersecurity terms.
+            </p>
+          </div>
+          
+          <WordPuzzleGame />
         </div>
       </section>
 
