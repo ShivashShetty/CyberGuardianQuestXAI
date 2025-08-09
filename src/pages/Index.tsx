@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Brain, Target, Trophy, Zap, Eye, Lock, AlertTriangle, BrainCircuit } from 'lucide-react';
+import { Shield, Brain, Target, Trophy, Zap, Eye, Lock, AlertTriangle, BrainCircuit, Search } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -11,7 +11,8 @@ import { AIExplainer } from '@/components/AIExplainer';
 import { LearningModule } from '@/components/LearningModule';
 import { ProgressDashboard } from '@/components/ProgressDashboard';
 import { CyberDefenseGame } from '@/components/CyberDefenseGame';
-import { WordPuzzleGame } from '@/components/WordGame'; // --- IMPORT THE NEW COMPONENT ---
+import { WordPuzzleGame } from '@/components/WordGame';
+import { WordSearchGame } from '@/components/ScrambledWordGame'; // --- IMPORT THE NEW COMPONENT ---
 
 const Index = () => {
   const [userLevel, setUserLevel] = useState(1);
@@ -311,7 +312,7 @@ const Index = () => {
         </div>
       </section>
       
-      {/* --- NEW: WORD PUZZLE GAME SECTION --- */}
+      {/* Word Puzzle Game Section */}
       <section id="word-puzzle" className="py-20 px-4 bg-card/50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -324,6 +325,22 @@ const Index = () => {
           </div>
           
           <WordPuzzleGame />
+        </div>
+      </section>
+
+      {/* --- NEW: WORD SEARCH GAME SECTION --- */}
+      <section id="word-search" className="py-20 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4 bg-gradient-cyber bg-clip-text text-transparent">
+              Word Search Challenge
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Find hidden cybersecurity terms in the grid and put your observation skills to the test.
+            </p>
+          </div>
+          
+          <WordSearchGame />
         </div>
       </section>
 
