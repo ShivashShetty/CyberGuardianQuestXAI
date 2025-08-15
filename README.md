@@ -24,20 +24,11 @@ CyberGuard Academy is a comprehensive educational platform designed to make cybe
 - npm or yarn package manager
 - Modern web browser
 
-git clone <YOUR_GIT_URL>
-cd <YOUR_PROJECT_NAME>
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
 ### Installation
 ```bash
 # Clone the repository
-git clone <YOUR_GIT_URL>
-cd <YOUR_PROJECT_NAME>
+git clone https://github.com/ShivashShetty/CyberGuardianQuestXAI.git
+cd CyberGuardianQuestXAI
 
 # Install dependencies
 npm install
