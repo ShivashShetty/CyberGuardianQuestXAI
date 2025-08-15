@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Brain, Target, Trophy, Zap, Eye, Lock, AlertTriangle, BrainCircuit, Search } from 'lucide-react';
+import { Shield, Brain, Target, Trophy, Zap, Eye, Lock, AlertTriangle, BrainCircuit, Search, User, Edit } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -12,9 +12,14 @@ import { LearningModule } from '@/components/LearningModule';
 import { ProgressDashboard } from '@/components/ProgressDashboard';
 import { CyberDefenseGame } from '@/components/CyberDefenseGame';
 import { WordPuzzleGame } from '@/components/WordGame';
-import { WordSearchGame } from '@/components/ScrambledWordGame'; // --- IMPORT THE NEW COMPONENT ---
+import { WordSearchGame } from '@/components/ScrambledWordGame';
+import { ArcadeScoreboard } from '@/components/ArcadeScoreboard';
 
-const Index = () => {
+interface IndexProps {
+  playerName?: string;
+}
+
+const Index: React.FC<IndexProps> = ({ playerName }) => {
   const [userLevel, setUserLevel] = useState(1);
   const [userXP, setUserXP] = useState(0);
   const [currentModule, setCurrentModule] = useState('phishing');
@@ -130,6 +135,12 @@ const Index = () => {
     }
   };
 
+  // Function to trigger the player name input modal
+  const triggerPlayerNameInput = () => {
+    // Dispatch custom event to open the modal in App.tsx
+    window.dispatchEvent(new CustomEvent('openPlayerNameModal'));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-bg">
       {/* Hero Section */}
@@ -187,7 +198,7 @@ const Index = () => {
 
       {/* User Progress Header */}
       <div className="sticky top-0 z-50 bg-card/90 backdrop-blur-sm border-b border-border p-4">
-        <div className="container mx-auto flex items-center justify-between">
+        <div className="container mx-auto flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-4">
             <Badge variant="outline" className="bg-gradient-cyber text-black">
               Level {userLevel}
@@ -199,9 +210,29 @@ const Index = () => {
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-cyber-orange" />
-            <span className="text-sm font-medium">{completedModules.length}/{modules.length} Modules</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Zap className="h-4 w-4 text-cyber-orange" />
+              <span className="text-sm font-medium">{completedModules.length}/{modules.length} Modules</span>
+            </div>
+            
+            {/* Player Name Section */}
+            <div className="flex items-center gap-2 border-l border-border pl-4">
+              <User className="h-4 w-4 text-primary" />
+              {playerName ? (
+                <span className="text-sm font-medium">{playerName}</span>
+              ) : (
+                <span className="text-sm text-muted-foreground">Guest</span>
+              )}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-6 w-6 p-0"
+                onClick={triggerPlayerNameInput}
+              >
+                <Edit className="h-3 w-3" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -215,6 +246,7 @@ const Index = () => {
             completedModules={completedModules}
             achievements={achievements}
             gameStats={gameStats}
+            playerName={playerName}
           />
         </div>
       </section>
@@ -308,7 +340,7 @@ const Index = () => {
             </p>
           </div>
 
-          <CyberDefenseGame onGameComplete={handleGameComplete} />
+          <CyberDefenseGame onGameComplete={handleGameComplete} playerName={playerName} />
         </div>
       </section>
       
@@ -383,6 +415,13 @@ const Index = () => {
               </Card>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Arcade Scoreboard Section */}
+      <section className="py-20 px-4 bg-card/50">
+        <div className="container mx-auto">
+          <ArcadeScoreboard />
         </div>
       </section>
     </div>

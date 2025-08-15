@@ -114,12 +114,12 @@ export const AIExplainer = () => {
         explanation: aiResponse,
         confidence: 93,
         reasoning: [
-          'Kimi (OpenRouter) response from backend',
+          'Gemini AI response from backend',
           'Contextual understanding of cybersecurity terms',
           'Secure AI backend processing',
           'Cyber-relevant knowledge synthesis',
         ],
-        relatedConcepts: ['Cybersecurity', 'AI Reasoning', 'Kimi AI'],
+        relatedConcepts: ['Cybersecurity', 'AI Reasoning', 'Gemini AI'],
         difficulty: 'intermediate',
       };
 

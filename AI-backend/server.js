@@ -4,15 +4,32 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const axios = require("axios");
 
+// Import MongoDB modules
+const { connectDB } = require('./db/index');
+const apiRoutes = require('./routes/api');
+
 dotenv.config();
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
 
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+// Connect to MongoDB
+connectDB().then(() => {
+  console.log("MongoDB connected successfully");
+}).catch((error) => {
+  console.error("Failed to connect to MongoDB:", error);
+});
+
+
+
+// Gemini AI endpoint
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+if (!GEMINI_API_KEY) {
+  throw new Error("GEMINI_API_KEY is not set in .env file");
+}
 
 app.post("/ask", async (req, res) => {
   const { question } = req.body;
@@ -23,41 +40,40 @@ app.post("/ask", async (req, res) => {
 
   try {
     const response = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
-        model: "moonshotai/kimi-k2:free", // ✅ This is the correct model
-        messages: [
+        contents: [
           {
-            role: "system",
-            content: "You are a helpful AI assistant with expertise in cybersecurity.",
-          },
-          {
-            role: "user",
-            content: question,
-          },
-        ],
-        max_tokens: 500,
-        temperature: 0.7,
+            parts: [
+              { text: "You are a helpful AI Cybersecurity Expert, answer questions about Cybersecurity in a concise and informative manner. Provide practical advice and solutions to common cybersecurity issues. If you don't know the answer, say \"I don't know.\"" }
+            ]
+          }
+        ]
       },
       {
         headers: {
-          Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-          "HTTP-Referer": "http://localhost:3000", // required
-          "X-Title": "Cyber Guardian Quest", // optional, shown on OpenRouter site
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
-
-    const aiResponse = response.data.choices[0]?.message?.content || "No answer.";
-    console.log("✅ AI:", aiResponse);
+    // Gemini returns response.data.candidates[0].content.parts[0].text
+    const aiResponse = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "No answer.";
+    console.log("✅ Gemini AI:", aiResponse);
     res.json({ answer: aiResponse });
   } catch (error) {
-    console.error("❌ OpenRouter API Error:", error.response?.data || error.message);
+    console.error("❌ Gemini API Error:", error.response?.data || error.message);
     res.status(500).json({ error: "AI backend failed." });
   }
 });
 
+
+// Add MongoDB API routes
+app.use('/api', apiRoutes);
+
+// Add admin API routes
+const adminRoutes = require('./routes/admin');
+app.use('/api/admin', adminRoutes);
+
 app.listen(PORT, () => {
-  console.log(`🚀 Kimi (OpenRouter) backend running at http://localhost:${PORT}`);
+  console.log(`🚀 Gemini AI backend running at http://localhost:${PORT}`);
 });

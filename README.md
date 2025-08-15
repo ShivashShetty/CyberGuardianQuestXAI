@@ -6,11 +6,14 @@
 
 CyberGuard Academy is a comprehensive educational platform designed to make cybersecurity learning engaging and accessible. The platform combines traditional learning modules with an interactive tower defense game and AI-powered explanations to create an immersive learning experience.
 
+
 ### Key Features
 
 - **📚 Interactive Learning Modules**: Structured cybersecurity curriculum with progressive difficulty
 - **🎮 Cyber Defense Game**: Real-time tower defense game with cybersecurity themes
-- **🤖 AI Learning Assistant**: Intelligent threat explanations and interactive Q&A
+- **🏆 Arcade-Style Scoreboard**: Every game session (even with the same player name) is a unique entry. Scoreboard displays all sessions, sorted by score, with the highest at the top.
+- **🔒 Admin Dashboard**: Password-protected admin page (`/admin`, password: `admin123`) for managing scoreboard entries and monitoring backend status.
+- **🤖 AI Learning Assistant (Gemini)**: Uses Google Gemini API for intelligent threat explanations and interactive Q&A. API key is stored in `.env`.
 - **📊 Progress Tracking**: Comprehensive dashboard with statistics and achievements
 - **🏆 Gamification System**: XP, levels, achievements, and combo multipliers
 
@@ -21,6 +24,15 @@ CyberGuard Academy is a comprehensive educational platform designed to make cybe
 - npm or yarn package manager
 - Modern web browser
 
+git clone <YOUR_GIT_URL>
+cd <YOUR_PROJECT_NAME>
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
 ### Installation
 ```bash
 # Clone the repository
@@ -29,6 +41,8 @@ cd <YOUR_PROJECT_NAME>
 
 # Install dependencies
 npm install
+
+# Set up your .env file (see below)
 
 # Start development server
 npm run dev
@@ -193,10 +207,41 @@ npm run preview      # Preview production build locally
 - **CDN Integration**: Optimized global content delivery
 - **Custom Domains**: Full custom domain support
 
+
 ### Environment Configuration
+- **.env file**: Required variables:
+	- `MONGODB_URI` - Your MongoDB connection string
+	- `MONGODB_DB_NAME` - Your MongoDB database name
+	- `PORT` - Port for backend server (default: 5000)
+	- `GEMINI_API_KEY` - Your Google Gemini API key (for AI assistant)
 - **Build Optimizations**: Tree shaking and code splitting
 - **Asset Optimization**: Image compression and lazy loading
 - **Security Headers**: Content Security Policy and HTTPS enforcement
+## 🏆 Arcade-Style Scoreboard
+
+- Each game session is a unique entry, even for the same player name.
+- Scoreboard displays all sessions, sorted by score (highest first).
+- Admins can add or delete entries via the admin dashboard.
+
+## 🔒 Admin Dashboard
+
+- Accessible at `/admin` (link in footer).
+- Password: `admin123`
+- Features:
+	- View, add, and delete scoreboard entries
+	- See backend status (MongoDB and AI)
+	- Modern cyber-themed UI matching the main site
+
+## 🤖 AI Assistant (Google Gemini)
+
+- `/ask` endpoint uses Google Gemini API for cybersecurity Q&A.
+- API key is stored in `.env` as `GEMINI_API_KEY`.
+- No AI key is hardcoded in the codebase.
+
+## 🖥️ Frontend Improvements
+
+- Footer is always at the bottom using flexbox layout.
+- Admin dashboard is accessible via a subtle footer link.
 
 ## 🤝 Contributing
 

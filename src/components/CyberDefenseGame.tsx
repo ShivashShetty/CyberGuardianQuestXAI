@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Shield, Zap, AlertTriangle, Trophy, Play, Pause, RotateCcw, Coins, Target, Flame, Timer } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { GameService } from '@/services/gameService';
+import { updatePlayerStats } from '@/services/playerService';
 
 // Interfaces
 interface GameState {
@@ -83,9 +85,10 @@ const TOWER_LIFESPAN = 25000; // 25 seconds in milliseconds
 
 interface Props {
   onGameComplete?: (score: number, level: number, wave: number) => void;
+  playerName?: string;
 }
 
-export const CyberDefenseGame: React.FC<Props> = ({ onGameComplete }) => {
+export const CyberDefenseGame: React.FC<Props> = ({ onGameComplete, playerName }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<number>();
   const lastTimeRef = useRef<number>(0);
@@ -119,6 +122,8 @@ export const CyberDefenseGame: React.FC<Props> = ({ onGameComplete }) => {
   const [hasStarted, setHasStarted] = useState(false);
   // NEW: State for the oldest tower's lifespan timer
   const [oldestTowerTimeLeft, setOldestTowerTimeLeft] = useState(TOWER_LIFESPAN);
+  // NEW: State for game session ID
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   const { toast } = useToast();
 
@@ -212,9 +217,41 @@ export const CyberDefenseGame: React.FC<Props> = ({ onGameComplete }) => {
             if (newState.score > highScore) {
               setHighScore(newState.score);
               localStorage.setItem("cyberGameHighScore", newState.score.toString());
-              toast({ title: "🏆 New High Score!", description: `You've set a new record: ${newState.score}` });
+              // Show toast for new high score in effect
             }
-            toast({ title: "System Breached! 💀", description: `Final Score: ${newState.score}`, variant: "destructive" });
+            
+
+            // Send game completion data to backend
+            if (sessionId && playerName) {
+              GameService.completeGameSession(sessionId, {
+                score: newState.score,
+                level: newState.level,
+                wave: newState.wave,
+                xpEarned: Math.floor(newState.score / 10) + (newState.level * 50) + (newState.wave * 25),
+                stats: {
+                  threatsKilled: newState.threatsKilled,
+                  accuracy: newState.accuracy,
+                  moneyEarned: newState.money,
+                  defensesPlaced: newState.defenses.length
+                }
+              }).catch(error => {
+                console.error("Failed to send game completion data:", error);
+              });
+
+              // Update player stats in MongoDB for scoreboard using stored playerId
+              const playerId = localStorage.getItem('playerId');
+              if (playerId) {
+                updatePlayerStats(
+                  playerId,
+                  newState.score,
+                  Math.floor(newState.score / 10) + (newState.level * 50) + (newState.wave * 25)
+                ).catch(error => {
+                  console.error("Failed to update player stats for scoreboard:", error);
+                });
+              }
+            }
+            
+            // Show game over toast in effect
             if (onGameComplete) onGameComplete(newState.score, newState.level, newState.wave);
           }
           return false;
@@ -295,12 +332,7 @@ export const CyberDefenseGame: React.FC<Props> = ({ onGameComplete }) => {
                   }]);
                 }
 
-                if (newState.comboMultiplier > 2) {
-                  toast({
-                    title: `${newState.comboMultiplier.toFixed(1)}x COMBO! 🔥`,
-                    description: `+${comboReward} points`,
-                  });
-                }
+                // Show combo toast in effect
               }
               // --- END OF RESTORED LOGIC ---
             });
@@ -331,7 +363,7 @@ export const CyberDefenseGame: React.FC<Props> = ({ onGameComplete }) => {
 
     setParticles(prev => prev.map(p => ({ ...p, x: p.x + p.vx, y: p.y + p.vy, life: p.life - 1 })).filter(p => p.life > 0));
 
-  }, [spawnWave, toast, highScore, onGameComplete]);
+  }, [spawnWave, toast, highScore, onGameComplete, sessionId, playerName]);
 
   const gameLoop = useCallback((timestamp: number) => {
     if (!lastTimeRef.current) lastTimeRef.current = timestamp;
@@ -473,8 +505,37 @@ export const CyberDefenseGame: React.FC<Props> = ({ onGameComplete }) => {
     };
   }, [gameState.gameRunning, gameState.gameOver, gameLoop]);
 
-  const startGame = () => {
+  const startGame = async () => {
     setHasStarted(true);
+    
+    // Create game session in backend
+    if (playerName) {
+      try {
+        const session = await GameService.recordGameSession({
+          playerId: 'temp-player-id', // This would be replaced with actual player ID
+          playerName: playerName,
+          score: 0,
+          level: 1,
+          wave: 1,
+          xpEarned: 0,
+          stats: {
+            threatsKilled: 0,
+            accuracy: 100,
+            moneyEarned: 0,
+            defensesPlaced: 0
+          }
+        });
+        setSessionId(session.id);
+      } catch (error) {
+        console.error("Failed to create game session:", error);
+        toast({
+          title: "Warning",
+          description: "Could not connect to server. Game data will not be saved.",
+          variant: "destructive"
+        });
+      }
+    }
+    
     setGameState(prev => ({
       ...prev,
       score: 0,
@@ -491,10 +552,45 @@ export const CyberDefenseGame: React.FC<Props> = ({ onGameComplete }) => {
     }));
     setParticles([]);
     spawnWave(1);
+  // Show game start toast in effect
+// Toast side effects
+useEffect(() => {
+  if (gameState.gameRunning && !gameState.gameOver && hasStarted) {
     toast({
       title: "System Defense Activated! 🚀",
       description: "Protect your network from cyber threats!",
     });
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [hasStarted]);
+
+useEffect(() => {
+  if (gameState.gameOver && hasStarted === false) {
+    toast({ title: "System Breached! 💀", description: `Final Score: ${gameState.score}`, variant: "destructive" });
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [gameState.gameOver, hasStarted]);
+
+const prevHighScore = useRef(highScore);
+useEffect(() => {
+  if (gameState.score > prevHighScore.current) {
+    toast({ title: "🏆 New High Score!", description: `You've set a new record: ${gameState.score}` });
+    prevHighScore.current = gameState.score;
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [gameState.score]);
+
+const prevCombo = useRef(1);
+useEffect(() => {
+  if (gameState.comboMultiplier > 2 && gameState.comboMultiplier !== prevCombo.current) {
+    toast({
+      title: `${gameState.comboMultiplier.toFixed(1)}x COMBO! 🔥`,
+      description: `+${Math.floor(gameState.comboMultiplier)} points`,
+    });
+    prevCombo.current = gameState.comboMultiplier;
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [gameState.comboMultiplier]);
   };
 
   const togglePause = () => {
@@ -522,6 +618,7 @@ export const CyberDefenseGame: React.FC<Props> = ({ onGameComplete }) => {
       lastKillTime: 0,
     });
     setParticles([]);
+    setSessionId(null);
   };
 
   const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {

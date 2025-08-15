@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trophy, Target, Zap, TrendingUp, Award, Shield, Brain, Lock, AlertTriangle } from 'lucide-react';
+import { Trophy, Target, Zap, TrendingUp, Award, Shield, Brain, Lock, AlertTriangle, User } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +21,7 @@ interface Props {
     gamesPlayed: number;
     totalScore: number;
   };
+  playerName?: string;
 }
 
 const moduleIcons: Record<string, React.ComponentType<any>> = {
@@ -42,7 +43,8 @@ export const ProgressDashboard: React.FC<Props> = ({
   userXP, 
   completedModules, 
   achievements,
-  gameStats
+  gameStats,
+  playerName
 }) => {
   const nextLevelXP = userLevel * 500;
   const currentLevelXP = userXP % 500;
@@ -84,6 +86,27 @@ const finalGameStats = gameStats || {
           Track your cybersecurity learning journey and achievements
         </p>
       </div>
+
+      {/* Player Info Section */}
+      {playerName && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <User className="h-5 w-5 text-primary" />
+              Player Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold">{playerName}</h3>
+                <p className="text-muted-foreground">Current player</p>
+              </div>
+              <Badge variant="outline">Online</Badge>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Level and XP Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
