@@ -139,8 +139,8 @@ export const WordSearchGame: React.FC = () => {
         if (timerRef.current) clearInterval(timerRef.current);
         
         const missedWords = gameState.words.filter(w => !w.found);
-        const penalty = missedWords.length * 15;
-        const finalScore = gameState.score - penalty;
+        // The penalty calculation has been removed. The score will no longer be reduced.
+        const finalScore = gameState.score;
 
         setGameState(prev => ({ ...prev, isGameOver: true, isPaused: true, score: finalScore }));
         
