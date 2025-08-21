@@ -31,12 +31,18 @@ if (!GEMINI_API_KEY) {
   throw new Error("GEMINI_API_KEY is not set in .env file");
 }
 
+
+
 app.post("/ask", async (req, res) => {
   const { question } = req.body;
 
   if (!question || typeof question !== "string") {
     return res.status(400).json({ error: "Invalid question." });
   }
+
+  // System prompt to guide Gemini's style
+  const systemPrompt =
+    "You are a helpful cybersecurity expert. Answer user questions in a concise, clear, and detailed way, but keep responses under 200 words. Use plain text, avoid markdown, stars, dashes, or bullet points. Use short paragraphs and direct explanations.";
 
   try {
     const response = await axios.post(
@@ -45,7 +51,8 @@ app.post("/ask", async (req, res) => {
         contents: [
           {
             parts: [
-              { text: "You are a helpful AI Cybersecurity Expert, answer questions about Cybersecurity in a concise and informative manner. Provide practical advice and solutions to common cybersecurity issues. If you don't know the answer, say \"I don't know.\"" }
+              { text: systemPrompt },
+              { text: question }
             ]
           }
         ]
