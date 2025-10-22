@@ -1,0 +1,12 @@
+  {
+  "name": "cyberguardianquestxai-backend",
+  "version": "1.0.0",
+  "scripts": {
+    "start:node": "node AI-backend/server.js",
+    "start:llm": "python AI-backend/phishing_api.py",
+    "start:all": "concurrently \"npm run start:node\" \"npm run start:llm\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

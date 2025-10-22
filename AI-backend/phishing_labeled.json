@@ -1,0 +1,26 @@
+[
+  { "text": "Dear User,\nYour account has been suspended due to suspicious activity. Please click the link below to verify your information and restore access.\nhttp://malicious-link.com\nThank you,\nSupport Team", "labels": ["Urgency", "Link Manipulation", "Authority"] },
+  { "text": "Hi,\nI am the CEO. I need you to send me the employee payroll data immediately. This is confidential.\nThanks,\nJohn", "labels": ["Authority", "Urgency", "Impersonation"] },
+  { "text": "Congratulations! You've won a $1000 gift card. Click here to claim your prize: http://phishingsite.com\nAct fast, offer expires soon!", "labels": ["Urgency", "Link Manipulation", "Reward"] },
+  { "text": "Hello,\nYour package could not be delivered. Please provide your address and payment details to reschedule delivery.\nBest,\nCourier Service", "labels": ["Information Request", "Impersonation"] },
+  { "text": "Hi team,\nPlease find attached the agenda for tomorrow's meeting.\nBest,\nJane", "labels": ["Ham"] },
+  { "text": "Dear Customer,\nWe noticed a login attempt from a new device. If this was not you, please reset your password immediately using the link below.\nhttp://fake-reset.com\nSecurity Team", "labels": ["Link Manipulation", "Urgency", "Authority"] },
+  { "text": "Hey,\nCan you send me the notes from last week's class?\nThanks!", "labels": ["Ham"] },
+
+  
+  { "text": "Hello, this is Microsoft support. We have detected unusual activity on your account. Please provide your bank details to secure your account.", "labels": ["Authority", "Urgency", "Impersonation", "Information Request"] },
+  { "text": "Your PayPal account will be locked unless you verify your password and billing information here: http://fake-paypal.com", "labels": ["Urgency", "Link Manipulation", "Information Request", "Authority"] },
+  { "text": "URGENT: Your tax refund is ready. Please send your bank account number to receive your funds.", "labels": ["Urgency", "Information Request", "Reward"] },
+  { "text": "Hi,\nI am your IT administrator. Please reply with your login credentials to resolve a security issue.", "labels": ["Authority", "Impersonation", "Information Request"] },
+  { "text": "Dear Customer,\nYou have won a free cruise! Click the link to claim your prize: http://scam-link.com", "labels": ["Reward", "Link Manipulation", "Urgency"] },
+  { "text": "Hello,\nThis is your bank. We need you to confirm your account number and PIN to avoid suspension.", "labels": ["Authority", "Impersonation", "Information Request", "Urgency"] },
+  { "text": "Hi,\nCan you send me the password for the shared drive?", "labels": ["Information Request", "Impersonation"] },
+  { "text": "Dear Employee,\nPlease update your direct deposit information using the attached form.", "labels": ["Information Request", "Authority"] },
+
+  
+  { "text": "Hi Alex,\nLet's meet for lunch tomorrow at noon.\nBest,\nSam", "labels": ["Ham"] },
+  { "text": "Reminder: Your dentist appointment is scheduled for next week.", "labels": ["Ham"] },
+  { "text": "Team,\nPlease review the attached project plan and send feedback.", "labels": ["Ham"] },
+  { "text": "Happy birthday! Hope you have a wonderful day.", "labels": ["Ham"] },
+  { "text": "Hi,\nCan you send me the slides from yesterday's meeting? Thanks!", "labels": ["Ham"] }
+]
