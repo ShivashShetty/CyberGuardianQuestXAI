@@ -1,3 +1,80 @@
+# CyberGuard Academy 🛡️
+
+**An interactive cybersecurity education platform combining gamified learning with AI-powered assistance.**
+
+## 📑 Table of Contents
+- [Project Overview](#-project-overview)
+- [Project Structure](#-project-structure)
+- [Quick Start](#-quick-start)
+- [LLM & Local Phishing Detection](#-llm--local-phishing-detection-recent-additions)
+- [Quick Run Commands](#-quick-run-commands-single-command-start)
+- [Model & Data Notes](#-model--data-notes)
+- [Troubleshooting](#-troubleshooting-common-errors-and-fixes)
+- [Recent Changes](#-what-changed-recently)
+- [Documentation](#-documentation)
+- [Acknowledgments](#-acknowledgments)
+
+## 🎯 Project Overview
+
+CyberGuard Academy is a comprehensive educational platform designed to make cybersecurity learning engaging and accessible. The platform combines traditional learning modules with an interactive tower defense game and AI-powered explanations to create an immersive learning experience.
+
+### Key Features
+
+- **📚 Interactive Learning Modules**: Structured cybersecurity curriculum with progressive difficulty
+- **🎮 Cyber Defense Game**: Real-time tower defense game with cybersecurity themes
+- **🏆 Arcade-Style Scoreboard**: Every game session (even with the same player name) is a unique entry. Scoreboard displays all sessions, sorted by score, with the highest at the top.
+- **🔒 Admin Dashboard**: Password-protected admin page (`/admin`, password: `admin123`) for managing scoreboard entries and monitoring backend status.
+- **🤖 AI Learning Assistant (Gemini)**: Uses Google Gemini API for intelligent threat explanations and interactive Q&A. API key is stored in `.env`.
+- **📊 Progress Tracking**: Comprehensive dashboard with statistics and achievements
+- **🏆 Gamification System**: XP, levels, achievements, and combo multipliers
+
+## Technology Stack
+
+### Frontend
+- **React**: UI framework with TypeScript support
+- **Vite**: Build tool and development server
+- **Tailwind CSS**: Utility-first CSS framework
+- **shadcn/ui**: Accessible and customizable component library
+- **Lucide**: Modern icon system
+
+### Backend
+- **Node.js**: Server runtime for the main backend
+- **Express**: Web framework for the REST API
+- **MongoDB**: Database for user data and game sessions
+- **FastAPI**: Python web framework for the LLM service
+- **Transformers**: Hugging Face library for local LLM integration
+
+### AI/ML
+- **Google Gemini**: AI model for interactive assistance
+- **Local LLM**: Custom-trained model for phishing detection
+- **PyTorch**: Deep learning framework for model training
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn package manager
+- Python 3.11+ and a virtual environment (recommended for the LLM)
+- Modern web browser
+
+### Installation
+```powershell
+# Clone the repository
+git clone https://github.com/ShivashShetty/CyberGuardianQuestXAI.git
+cd CyberGuardianQuestXAI
+
+# Install frontend dependencies
+npm install
+
+# (optional) Create and activate the Python virtual environment for AI backend
+python -m venv .venv
+& .venv/Scripts/Activate.ps1
+
+# Install Python dependencies used by the LLM server
+pip install fastapi uvicorn transformers torch
+
+```
+
 ## 🏗️ Project Structure
 
 ```
@@ -28,6 +105,7 @@ db/
 public/                 # Static public files (robots.txt, favicon)
 README.md               # This file
 package.json            # npm scripts and frontend deps
+```
 
 ## 🚀 How to get this project running (PowerShell)
 
@@ -76,89 +154,15 @@ This runs both the Node.js backend and the local FastAPI LLM server in parallel.
 
 5. Open the frontend
 
-Open `http://localhost:5173` (Vite default) in your browser to use the app.
+```powershell
+npm run dev
+```
+starts vite frontend on `localhost:8081`
 
 ### Tips
 - If the LLM fails to start due to port conflicts, edit `AI-backend/phishing_api.py` and change the uvicorn port (default 8082).
 - If transformers attempts to download private models, authenticate with `huggingface-cli login` or set `HF_TOKEN` in `.env`.
 - Use `npm run start:node --prefix d:/CyberGuardianQuestXAI` and `npm run start:llm --prefix d:/CyberGuardianQuestXAI` to start servers individually for debugging.
-
-# CyberGuard Academy 🛡️
-
-**An interactive cybersecurity education platform combining gamified learning with AI-powered assistance.**
-
-## 📑 Table of Contents
-- [Project Overview](#-project-overview)
-- [Project Structure](#-project-structure)
-- [Quick Start](#-quick-start)
-- [LLM & Local Phishing Detection](#-llm--local-phishing-detection-recent-additions)
-- [Quick Run Commands](#-quick-run-commands-single-command-start)
-- [Model & Data Notes](#-model--data-notes)
-- [Troubleshooting](#-troubleshooting-common-errors-and-fixes)
-- [Recent Changes](#-what-changed-recently)
-- [Documentation](#-documentation)
-- [Acknowledgments](#-acknowledgments)
-
-## 🎯 Project Overview
-
-CyberGuard Academy is a comprehensive educational platform designed to make cybersecurity learning engaging and accessible. The platform combines traditional learning modules with an interactive tower defense game and AI-powered explanations to create an immersive learning experience.
-
-### Key Features
-
-- **📚 Interactive Learning Modules**: Structured cybersecurity curriculum with progressive difficulty
-- **🎮 Cyber Defense Game**: Real-time tower defense game with cybersecurity themes
-- **🏆 Arcade-Style Scoreboard**: Every game session (even with the same player name) is a unique entry. Scoreboard displays all sessions, sorted by score, with the highest at the top.
-- **🔒 Admin Dashboard**: Password-protected admin page (`/admin`, password: `admin123`) for managing scoreboard entries and monitoring backend status.
-- **🤖 AI Learning Assistant (Gemini)**: Uses Google Gemini API for intelligent threat explanations and interactive Q&A. API key is stored in `.env`.
-- **📊 Progress Tracking**: Comprehensive dashboard with statistics and achievements
-- **🏆 Gamification System**: XP, levels, achievements, and combo multipliers
-
-## � Technology Stack
-
-### Frontend
-- **React**: UI framework with TypeScript support
-- **Vite**: Build tool and development server
-- **Tailwind CSS**: Utility-first CSS framework
-- **shadcn/ui**: Accessible and customizable component library
-- **Lucide**: Modern icon system
-
-### Backend
-- **Node.js**: Server runtime for the main backend
-- **Express**: Web framework for the REST API
-- **MongoDB**: Database for user data and game sessions
-- **FastAPI**: Python web framework for the LLM service
-- **Transformers**: Hugging Face library for local LLM integration
-
-### AI/ML
-- **Google Gemini**: AI model for interactive assistance
-- **Local LLM**: Custom-trained model for phishing detection
-- **PyTorch**: Deep learning framework for model training
-
-## �🚀 Quick Start
-
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn package manager
-- Python 3.11+ and a virtual environment (recommended for the LLM)
-- Modern web browser
-
-### Installation
-```powershell
-# Clone the repository
-git clone https://github.com/ShivashShetty/CyberGuardianQuestXAI.git
-cd CyberGuardianQuestXAI
-
-# Install frontend dependencies
-npm install
-
-# (optional) Create and activate the Python virtual environment for AI backend
-python -m venv .venv
-& .venv/Scripts/Activate.ps1
-
-# Install Python dependencies used by the LLM server
-pip install fastapi uvicorn transformers torch
-
-```
 
 ### Build for Production
 ```powershell
